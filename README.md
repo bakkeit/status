@@ -6,7 +6,8 @@ infrastructure configuration belong here. The repository is public by design.
 
 The header and browser icon use the owner-provided dark BakkeIT B/cloud/lock logo
 in `site/assets/bakkeit-logo.jpg`. The original image is preserved; CSS controls
-its display size.
+its display size. The minimal dark theme follows its navy, cyan and lavender
+palette, with solid panels and restrained resource indicators.
 
 ## Development
 
