@@ -32,9 +32,11 @@ minutes is marked stale. Resource measurements do not prove application health.
 
 Changes go through branches and reviewed PRs. The `Publish public status` workflow
 runs only on main using GitHub-hosted runners. Enable Pages with GitHub Actions as
-its source. A manual dispatch with no snapshot publishes the initial unavailable
-state. Production collection subsequently dispatches with the allowlisted JSON
-contract in `site/model.js`; measurements are included in the artifact, never Git
+its source. A main push or manual dispatch without a snapshot rebuilds the site
+using the currently published measurements, keeping their original timestamps. If those
+measurements cannot be fetched/validated, publishing fails instead of replacing
+them with empty values. Old values remain visibly stale. Production collection
+subsequently dispatches with the allowlisted JSON contract in `site/model.js`; measurements are included in the artifact, never Git
 commits. Only `site/` is deployed, without private data, tests or collection code.
 
 The GitHub App installed only on this repository needs Actions write permission
@@ -48,7 +50,8 @@ point the `status` CNAME to `bakkeit.github.io`, configure `status.bakkeit.cloud
 in Pages and enforce HTTPS when its certificate is ready. Do not create an A/AAAA
 record pointing at a BakkeIT server. Remove the DNS record if Pages is retired.
 
-The browser refreshes the published snapshot every minute; collection is scheduled
+The browser refreshes the published snapshot every minute using a unique query
+parameter to avoid stale shared-cache responses; collection is scheduled
 every five minutes. GitHub queues and Pages caching can delay visibility. If
 collection or publishing stops, the last published snapshot ages visibly.
 

@@ -155,7 +155,9 @@ function render() {
 }
 async function refresh() {
   try {
-    const response = await fetch("./status.json", { cache: "no-store" });
+    const response = await fetch("./status.json?updated=" + Date.now(), {
+      cache: "no-store",
+    });
     if (!response.ok) throw Error("Snapshot unavailable");
     snapshot = validateSnapshot(await response.json());
     notice.hidden = true;

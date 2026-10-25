@@ -49,7 +49,7 @@ try {
       ]),
     ],
   };
-  await page.route("**/status.json", (route) =>
+  await page.route("**/status.json*", (route) =>
     route.fulfill({ json: fixture }),
   );
   await page.setViewportSize({ width: 1440, height: 1100 });
@@ -80,7 +80,9 @@ try {
   await page.reload();
   await page.getByText("Foreldede data", { exact: true }).waitFor();
   await page.getByText("Måling utilgjengelig", { exact: true }).waitFor();
-  await page.route("**/status.json", (route) => route.fulfill({ status: 503 }));
+  await page.route("**/status.json*", (route) =>
+    route.fulfill({ status: 503 }),
+  );
   await page.reload();
   await page
     .getByText("Kunne ikke hente nye målinger.", { exact: false })
