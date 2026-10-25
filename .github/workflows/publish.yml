@@ -1,9 +1,11 @@
 name: Publish public status
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
     inputs:
       snapshot:
-        description: Sanitized snapshot JSON, or leave empty for the initial unavailable state
+        description: Sanitized snapshot JSON; leave empty to preserve the currently published measurements
         required: false
         type: string
 permissions:
@@ -35,17 +37,7 @@ jobs:
           SNAPSHOT: ${{ inputs.snapshot }}
         run: |
           npm test
-          node --input-type=module <<'JS'
-          import { writeFile } from 'node:fs/promises';
-          import { validateSnapshot } from './site/model.js';
-          if (process.env.SNAPSHOT) {
-            if (Buffer.byteLength(process.env.SNAPSHOT) > 32768) throw Error('Snapshot too large');
-            const data = validateSnapshot(JSON.parse(process.env.SNAPSHOT));
-            const age = Date.now() - Date.parse(data.generated_at);
-            if (!Number.isFinite(age) || age < -60000 || age > 900000) throw Error('Snapshot must be recent');
-            await writeFile('site/status.json', JSON.stringify(data));
-          }
-          JS
+          node scripts/prepare-snapshot.mjs
           node scripts/validate.mjs site/status.json
       - uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b  # v4
         with:
