@@ -4,6 +4,10 @@ Static, public resource dashboard for mx and storage. Hosted on GitHub Pages at
 `status.bakkeit.cloud` after domain setup. No production credentials or private
 infrastructure configuration belong here. The repository is public by design.
 
+The header and browser icon use the owner-provided dark BakkeIT B/cloud/lock logo
+in `site/assets/bakkeit-logo.jpg`. The original image is preserved; CSS controls
+its display size.
+
 ## Development
 
 Use Node 24 or newer. No runtime dependencies or build framework are required. Playwright is a pinned
