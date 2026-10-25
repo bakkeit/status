@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="nb">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Ressursoversikt for BakkeIT sine produksjonsservere."
+    />
+    <meta name="color-scheme" content="dark" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self'; connect-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'none'; form-action 'none'"
+    />
+    <title>BakkeIT · Serverstatus</title>
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./style.css" />
+    <script src="./app.js" type="module"></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="shell nav">
+        <a class="brand" href="./" aria-label="BakkeIT serverstatus"
+          ><span class="brand-symbol" aria-hidden="true">b.</span>BakkeIT<span
+            class="brand-divider"
+            >/</span
+          ><span class="brand-section">Status</span></a
+        >
+        <span class="nav-label"><span class="dot"></span> Infrastruktur</span>
+      </div>
+    </header>
+    <main class="shell">
+      <section class="intro" aria-labelledby="page-title">
+        <div>
+          <p class="eyebrow">BAKKEIT INFRASTRUCTURE</p>
+          <h1 id="page-title">Serveroversikt<span>.</span></h1>
+          <p class="lead">
+            Et øyeblikksbilde av ressursene bak mail og skylagring.
+          </p>
+        </div>
+        <div class="refresh-note">
+          <span class="refresh-icon" aria-hidden="true">↻</span>
+          <div>
+            Oppdateres ca. hvert 5. minutt<small id="last-update"
+              >Venter på målinger</small
+            >
+          </div>
+        </div>
+      </section>
+      <div class="section-heading">
+        <h2>Produksjon <span>02</span></h2>
+        <span>Helsinki, Finland <span aria-hidden="true">↗</span></span>
+      </div>
+      <p id="notice" class="notice" role="status" hidden></p>
+      <section
+        id="servers"
+        class="servers"
+        aria-label="Servermålinger"
+        aria-live="polite"
+      >
+        <p class="loading">Henter siste målinger …</p>
+      </section>
+      <aside class="explanation">
+        <span aria-hidden="true">ⓘ</span>
+        <p>
+          Viser serverressurser, ikke funksjonstester av mail eller Nextcloud.
+          Tidspunktet på hvert kort viser når serveren sist ble målt.
+        </p>
+      </aside>
+    </main>
+    <footer class="shell footer">
+      <span
+        >BakkeIT
+        <span class="muted">/ Egen infrastruktur. Full oversikt.</span></span
+      ><a href="https://github.com/bakkeit/status"
+        >Kildekode <span aria-hidden="true">↗</span></a
+      >
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,55 @@
+name: Publish public status
+on:
+  workflow_dispatch:
+    inputs:
+      snapshot:
+        description: Sanitized snapshot JSON, or leave empty for the initial unavailable state
+        required: false
+        type: string
+permissions:
+  contents: read
+concurrency:
+  group: public-status-pages
+  cancel-in-progress: false
+jobs:
+  publish:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803  # v6
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38  # v6
+        with:
+          node-version: '24'
+      - name: Validate the site and supplied public data
+        env:
+          SNAPSHOT: ${{ inputs.snapshot }}
+        run: |
+          npm test
+          node --input-type=module <<'JS'
+          import { writeFile } from 'node:fs/promises';
+          import { validateSnapshot } from './site/model.js';
+          if (process.env.SNAPSHOT) {
+            if (Buffer.byteLength(process.env.SNAPSHOT) > 32768) throw Error('Snapshot too large');
+            const data = validateSnapshot(JSON.parse(process.env.SNAPSHOT));
+            const age = Date.now() - Date.parse(data.generated_at);
+            if (!Number.isFinite(age) || age < -60000 || age > 900000) throw Error('Snapshot must be recent');
+            await writeFile('site/status.json', JSON.stringify(data));
+          }
+          JS
+          node scripts/validate.mjs site/status.json
+      - uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b  # v4
+        with:
+          path: site
+          retention-days: 1
+      - id: deploy
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e  # v4
